@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-pearl font-sans text-primary antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF9F6; /* Pearl background */
+}
+::-webkit-scrollbar-thumb {
+  background: #C5A880; /* Soft Gold */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A3855E; /* Dark Gold */
+}
+
+/* Premium Glassmorphism Helper */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.glassmorphism-dark {
+  background: rgba(10, 29, 55, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(197, 168, 128, 0.15);
+}
+
+/* Elegant Text Shimmer */
+.text-shimmer {
+  background: linear-gradient(to right, #0A1D37 20%, #C5A880 40%, #C5A880 60%, #0A1D37 80%);
+  background-size: 200% auto;
+  color: #000;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 6s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Floating CTA button animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Skeleton Loading Shimmer */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(197, 168, 128, 0.05) 25%,
+    rgba(197, 168, 128, 0.15) 37%,
+    rgba(197, 168, 128, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: loading-shimmer 1.4s ease infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+/* Swiper Slider styling overrides */
+.swiper-pagination-bullet-active {
+  background: #C5A880 !important;
+  width: 24px !important;
+  border-radius: 4px !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #C5A880 !important;
+}
