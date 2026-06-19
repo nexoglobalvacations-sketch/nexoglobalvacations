@@ -43,7 +43,7 @@ const PackageDetails = () => {
         if (response.data?.success) {
           setPack(response.data.data);
           // Auto fill initial inquiry text
-          setMessage(`Hi TT Company, I'm interested in booking the "${response.data.data.name}" tour package. Please share availability.`);
+          setMessage(`Hi Nexo Global Vacations, I'm interested in booking the "${response.data.data.name}" tour package. Please share availability.`);
         } else {
           navigate('/packages');
         }
@@ -100,7 +100,7 @@ const PackageDetails = () => {
     if (!pack) return;
     const phoneNumber = '919999946509';
     const text = encodeURIComponent(
-      `Hello TT Company! I am interested in booking the "${pack.name}" package (${pack.duration}) starting from ₹${pack.price}. Please guide me on next steps.`
+      `Hello Nexo Global Vacations! I am interested in booking the "${pack.name}" package (${pack.duration}) starting from ₹${pack.price}. Please guide me on next steps.`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${text}`, '_blank');
   };

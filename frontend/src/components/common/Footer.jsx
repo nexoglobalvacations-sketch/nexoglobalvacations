@@ -5,39 +5,66 @@ import { FiPhone, FiMail, FiMapPin, FiInstagram, FiFacebook, FiYoutube, FiTwitte
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    alert('Thank you for subscribing to our luxury travel newsletter!');
-    e.target.reset();
-  };
-
   return (
     <footer className="bg-primary text-gray-300 pt-16 pb-8 border-t border-gold/15">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Footer Top: Logo and Social Links */}
+        <div className="flex flex-col md:flex-row justify-between items-center pb-8 mb-10 border-b border-white/5">
+          <Link to="/" className="inline-flex transition-transform duration-300 hover:scale-105 mb-6 md:mb-0">
+            <img
+              src="/logo.png"
+              alt="Nexo Global Vacations"
+              className="h-24 w-auto object-contain"
+            />
+          </Link>
+          <div className="flex space-x-3.5">
+            <a 
+              href="https://facebook.com" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="text-gray-400 hover:text-gold transition-all duration-300 p-2.5 bg-white/5 hover:bg-gold/10 rounded-full border border-white/5 hover:border-gold/30"
+            >
+              <FiFacebook className="h-5 w-5" />
+            </a>
+            <a 
+              href="https://instagram.com" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="text-gray-400 hover:text-gold transition-all duration-300 p-2.5 bg-white/5 hover:bg-gold/10 rounded-full border border-white/5 hover:border-gold/30"
+            >
+              <FiInstagram className="h-5 w-5" />
+            </a>
+            <a 
+              href="https://youtube.com" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="text-gray-400 hover:text-gold transition-all duration-300 p-2.5 bg-white/5 hover:bg-gold/10 rounded-full border border-white/5 hover:border-gold/30"
+            >
+              <FiYoutube className="h-5 w-5" />
+            </a>
+            <a 
+              href="https://twitter.com" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="text-gray-400 hover:text-gold transition-all duration-300 p-2.5 bg-white/5 hover:bg-gold/10 rounded-full border border-white/5 hover:border-gold/30"
+            >
+              <FiTwitter className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+
+        {/* 4-Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           
           {/* Company Brief */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-serif text-gold font-semibold tracking-wider uppercase">
-              TT Company
-            </h3>
+          <div>
+            <h4 className="text-md font-semibold text-white uppercase tracking-wider mb-4 border-b border-gold/20 pb-2">
+              Our Agency
+            </h4>
             <p className="text-sm text-gray-400 leading-relaxed">
               We design premium, hand-picked travel experiences for the modern global traveler. Explore luxury tour packages across India's spiritual hubs, tropical coastlines, and mountain retreats.
             </p>
-            <div className="flex space-x-4 pt-2">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="hover:text-gold transition-colors">
-                <FiFacebook className="h-5 w-5" />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-gold transition-colors">
-                <FiInstagram className="h-5 w-5" />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-gold transition-colors">
-                <FiYoutube className="h-5 w-5" />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-gold transition-colors">
-                <FiTwitter className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -45,7 +72,7 @@ const Footer = () => {
             <h4 className="text-md font-semibold text-white uppercase tracking-wider mb-4 border-b border-gold/20 pb-2">
               Explore Journeys
             </h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link to="/category/Spiritual" className="hover:text-gold transition-colors">Spiritual Tours</Link>
               </li>
@@ -64,7 +91,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Details (Matching Reference Screenshot) */}
+          {/* Contact Details */}
           <div>
             <h4 className="text-md font-semibold text-white uppercase tracking-wider mb-4 border-b border-gold/20 pb-2">
               Get In Touch
@@ -82,40 +109,37 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <FiMail className="text-gold h-5 w-5 flex-shrink-0" />
-                <span className="text-gray-400">info@ttcompany.com</span>
+                <span className="text-gray-400">info@nexoglobalvacations.com</span>
               </li>
             </ul>
           </div>
 
-          {/* Newsletter subscription */}
+          {/* Our Promise (Trust Accreditations) */}
           <div>
             <h4 className="text-md font-semibold text-white uppercase tracking-wider mb-4 border-b border-gold/20 pb-2">
-              Newsletter
+              Our Promise
             </h4>
-            <p className="text-xs text-gray-400 leading-relaxed mb-4">
-              Subscribe to receive updates on hand-picked weekend escapes, customized tours, and secret deals.
-            </p>
-            <form onSubmit={handleSubscribe} className="flex flex-col space-y-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-primary-dark text-white text-sm px-4 py-2.5 rounded-md border border-white/10 focus:outline-none focus:border-gold transition-colors"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-gold text-primary font-bold text-sm px-4 py-2.5 rounded-md hover:bg-gold-light transition-all shadow-md active:translate-y-0.5"
-              >
-                Subscribe
-              </button>
-            </form>
+            <ul className="space-y-3.5 text-xs text-gray-400">
+              <li className="leading-relaxed">
+                <strong className="text-gold block mb-0.5 font-medium">100% Customized Journeys</strong>
+                Itineraries customized to match your exact interests and travel pace.
+              </li>
+              <li className="leading-relaxed">
+                <strong className="text-gold block mb-0.5 font-medium">Handpicked Premium Stays</strong>
+                Bespoke luxury hotels and boutique resorts handpicked by our team.
+              </li>
+              <li className="leading-relaxed">
+                <strong className="text-gold block mb-0.5 font-medium">24/7 Dedicated Support</strong>
+                Dedicated travel coordinator assistance throughout your entire trip.
+              </li>
+            </ul>
           </div>
 
         </div>
 
         {/* Bottom Banner */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
-          <p>&copy; {currentYear} TT Company. All Rights Reserved. Designed with elegance.</p>
+          <p>&copy; {currentYear} Nexo Global Vacations. All Rights Reserved. Designed with elegance.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/faqs" className="hover:text-gold transition-colors">Privacy Policy</Link>
             <Link to="/faqs" className="hover:text-gold transition-colors">Terms of Service</Link>

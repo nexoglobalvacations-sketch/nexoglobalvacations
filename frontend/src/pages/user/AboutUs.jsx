@@ -26,12 +26,12 @@ const AboutUs = () => {
       {/* Narrative Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center text-left">
         <div className="space-y-6">
-          <span className="text-gold font-bold text-xs uppercase tracking-widest">About TT Company</span>
+          <span className="text-gold font-bold text-xs uppercase tracking-widest">About Nexo Global Vacations</span>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-primary leading-tight">
             We Create Memories That Remain Eternal
           </h2>
           <p className="text-sm text-gray-500 leading-relaxed">
-            TT Company was founded with a singular, clear vision: to redefine bespoke travel for the global explorer. We specialize in planning luxury experiences across India and exotic international regions. From high-altitude monastical trails in Ladakh to the tranquil, palm-fringed lagoons of Alleppey and deep spiritual journeys through Varanasi, we design tours that excite the spirit.
+            Nexo Global Vacations was founded with a singular, clear vision: to redefine bespoke travel for the global explorer. We specialize in planning luxury experiences across India and exotic international regions. From high-altitude monastical trails in Ladakh to the tranquil, palm-fringed lagoons of Alleppey and deep spiritual journeys through Varanasi, we design tours that excite the spirit.
           </p>
           <p className="text-sm text-gray-500 leading-relaxed">
             Our team handles all travel logistics locally, booking only highly verified boutique hotels, reliable private transport drivers, and premium cruise ferries.

@@ -76,7 +76,7 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Modal Branding Header */}
         <div className="text-center space-y-2 mb-8">
-          <span className="text-[10px] font-bold text-gold uppercase tracking-[0.25em]">TT Company luxury</span>
+          <span className="text-[10px] font-bold text-gold uppercase tracking-[0.25em]">Nexo Global Vacations</span>
           <h3 className="text-2xl font-serif font-bold text-white tracking-wide">
             {isSignUp ? 'Create Traveler Account' : 'Traveler Portal Access'}
           </h3>
@@ -165,7 +165,7 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
         <div className="text-center mt-6 text-[10px] text-gray-400 border-t border-white/5 pt-4">
           {isSignUp ? (
             <p>
-              Already registered with TT Company?{' '}
+              Already registered with Nexo Global?{' '}
               <button 
                 onClick={() => { setIsSignUp(false); setError(''); }}
                 className="text-gold font-bold hover:underline focus:outline-none"

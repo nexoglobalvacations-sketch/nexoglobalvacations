@@ -32,7 +32,7 @@ const WhyChooseUs = () => {
         {/* Title */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-serif text-primary">
-            Why Travel With <span className="font-bold">TT Company</span>
+            Why Travel With <span className="font-bold">Nexo Global Vacations</span>
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-widest mt-2">
             The Gold Standard in Bespoke Tourism

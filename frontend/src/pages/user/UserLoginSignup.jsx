@@ -186,7 +186,7 @@ const UserLoginSignup = () => {
               className="text-xs text-primary font-bold hover:text-gold transition-colors focus:outline-none"
             >
               {mode === 'login' 
-                ? "New to TT Company? Create Traveler Account" 
+                ? "New to Nexo Global? Create Traveler Account" 
                 : "Already registered? Access Traveler Portal"}
             </button>
           </div>

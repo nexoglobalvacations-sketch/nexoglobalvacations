@@ -52,7 +52,7 @@ const Login = () => {
       <div className="w-full max-w-md bg-primary-dark/80 border border-gold/15 shadow-premium rounded-3xl p-8 sm:p-10 relative z-10 glassmorphism-dark">
         <div className="text-center space-y-2 mb-8">
           <span className="text-2xl font-bold font-serif tracking-widest text-gold uppercase">
-            TT Company
+            Nexo Global
           </span>
           <h2 className="text-xl font-serif text-white font-semibold">
             Admin Portal Access

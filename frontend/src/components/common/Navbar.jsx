@@ -61,10 +61,12 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo Brand */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center space-x-2">
-              <span className="text-2xl font-bold font-serif tracking-widest text-gold uppercase">
-                TT Company
-              </span>
+            <Link to="/" className="flex items-center transition-transform duration-300 hover:scale-105">
+              <img
+                src="/logo.png"
+                alt="Nexo Global Vacations"
+                className="h-14 w-auto object-contain"
+              />
             </Link>
           </div>
 

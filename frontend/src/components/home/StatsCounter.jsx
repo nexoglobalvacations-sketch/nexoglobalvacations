@@ -41,7 +41,7 @@ const StatsCounter = () => {
     { label: 'Happy Travelers', target: '15', suffix: 'K+', duration: 1500 },
     { label: 'Premium Tours', target: '250', suffix: '+', duration: 1800 },
     { label: 'Customer Satisfaction', target: '99', suffix: '%', duration: 1200 },
-    { label: 'Years Experience', target: '12', suffix: '+', duration: 1000 }
+    { label: 'Years Experience', target: '7', suffix: '+', duration: 1000 }
   ];
 
   return (
