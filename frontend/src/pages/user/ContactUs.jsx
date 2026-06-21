@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiPhone, FiMail, FiMapPin, FiCompass } from 'react-icons/fi';
 import { FaTelegramPlane } from 'react-icons/fa';
 import apiService from '../../services/api';
+import { useUserAuth } from '../../context/UserAuthContext';
+import TravelerAuthModal from '../../components/common/TravelerAuthModal';
 
 const ContactUs = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const { user, isAuthenticated } = useUserAuth();
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+      setEmail(user.email || '');
+      setPhone(user.phone || '');
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,7 +110,7 @@ const ContactUs = () => {
               </div>
               <div>
                 <h4 className="font-serif font-bold text-primary text-sm">Call Center</h4>
-                <p className="text-xs text-gray-400 mt-1">+91 9999946509 (Open 24/7)</p>
+                <p className="text-xs text-gray-400 mt-1">+91 62694 89351 (Open 24/7)</p>
               </div>
             </div>
 
@@ -108,7 +120,7 @@ const ContactUs = () => {
               </div>
               <div>
                 <h4 className="font-serif font-bold text-primary text-sm">Support Email</h4>
-                <p className="text-xs text-gray-400 mt-1">info@ttcompany.com</p>
+                <p className="text-xs text-gray-400 mt-1">nexoglobalvacations@gmail.com</p>
               </div>
             </div>
           </div>
@@ -142,7 +154,7 @@ const ContactUs = () => {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="e.g. +91 9999946509"
+                  placeholder="e.g. +91 98765 43210"
                   className="w-full bg-pearl border border-gray-200 px-4 py-2.5 rounded-xl text-primary focus:outline-none focus:border-gold"
                 />
               </div>
@@ -172,18 +184,34 @@ const ContactUs = () => {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full flex items-center justify-center space-x-2 bg-gold text-primary font-bold py-3.5 rounded-xl shadow hover:bg-gold-light transition-colors cursor-pointer"
-            >
-              <FaTelegramPlane className="h-4 w-4" />
-              <span>{submitting ? 'Sending...' : 'Send Message'}</span>
-            </button>
+            {isAuthenticated ? (
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full flex items-center justify-center space-x-2 bg-gold text-primary font-bold py-3.5 rounded-xl shadow hover:bg-gold-light transition-colors cursor-pointer"
+              >
+                <FaTelegramPlane className="h-4 w-4" />
+                <span>{submitting ? 'Sending...' : 'Send Message'}</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setAuthModalOpen(true)}
+                className="w-full flex items-center justify-center space-x-2 bg-gold text-primary font-bold py-3.5 rounded-xl shadow hover:bg-gold-light transition-colors cursor-pointer"
+              >
+                <FiCompass className="h-4 w-4 animate-spin-slow" />
+                <span>Sign In to Send Message</span>
+              </button>
+            )}
           </form>
         </div>
 
       </div>
+
+      <TravelerAuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+      />
     </div>
   );
 };

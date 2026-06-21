@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useUserAuth } from '../../context/UserAuthContext';
 import { FiMail, FiLock, FiUser, FiPhone, FiCompass } from 'react-icons/fi';
+import { GoogleLogin } from '@react-oauth/google';
 
 const UserLoginSignup = () => {
-  const { login, register, isAuthenticated, loading } = useUserAuth();
+  const { login, register, googleLogin, isAuthenticated, loading } = useUserAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
@@ -49,6 +50,23 @@ const UserLoginSignup = () => {
         // Success redirects inside useEffect
       } else {
         setErrorMsg(result.error || 'Authentication failed. Please verify your details.');
+      }
+    } catch (err) {
+      setErrorMsg('Server connection failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setSubmitting(true);
+      setErrorMsg('');
+      const result = await googleLogin(credentialResponse.credential);
+      if (result.success) {
+        // Redirect handled by useEffect
+      } else {
+        setErrorMsg(result.error || 'Google Login failed.');
       }
     } catch (err) {
       setErrorMsg('Server connection failed. Please try again.');
@@ -117,7 +135,6 @@ const UserLoginSignup = () => {
                     <FiUser className="absolute left-4 top-3 text-gold h-4 w-4" />
                     <input
                       type="text" required value={name} onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Rohan Sharma"
                       className="w-full bg-pearl border border-gray-200 pl-11 pr-4 py-3 rounded-xl text-primary focus:outline-none focus:border-gold"
                     />
                   </div>
@@ -130,7 +147,6 @@ const UserLoginSignup = () => {
                     <FiPhone className="absolute left-4 top-3 text-gold h-4 w-4" />
                     <input
                       type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
-                      placeholder="e.g. +91 9999946509"
                       className="w-full bg-pearl border border-gray-200 pl-11 pr-4 py-3 rounded-xl text-primary focus:outline-none focus:border-gold"
                     />
                   </div>
@@ -145,7 +161,6 @@ const UserLoginSignup = () => {
                 <FiMail className="absolute left-4 top-3 text-gold h-4 w-4" />
                 <input
                   type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. rohan@example.com"
                   className="w-full bg-pearl border border-gray-200 pl-11 pr-4 py-3 rounded-xl text-primary focus:outline-none focus:border-gold"
                 />
               </div>
@@ -158,7 +173,6 @@ const UserLoginSignup = () => {
                 <FiLock className="absolute left-4 top-3 text-gold h-4 w-4" />
                 <input
                   type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
                   className="w-full bg-pearl border border-gray-200 pl-11 pr-4 py-3 rounded-xl text-primary focus:outline-none focus:border-gold"
                 />
               </div>
@@ -174,6 +188,23 @@ const UserLoginSignup = () => {
                 : mode === 'login' ? 'Sign In' : 'Create Account'}
             </button>
 
+            {/* Divider */}
+            <div className="flex items-center my-4">
+              <div className="flex-grow border-t border-gray-200"></div>
+              <span className="px-3 text-gray-400 text-[10px] uppercase font-bold tracking-wider">or</span>
+              <div className="flex-grow border-t border-gray-200"></div>
+            </div>
+
+            {/* Google Login Button */}
+            <div className="flex justify-center w-full">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setErrorMsg('Google Sign-In failed')}
+                theme="outline"
+                shape="rectangular"
+                width="384"
+              />
+            </div>
           </form>
 
           {/* Mode Switcher Toggle */}

@@ -35,14 +35,16 @@ const apiService = {
   admin: {
     login: (credentials) => API.post('/admin/login', credentials),
     register: (details) => API.post('/admin/register', details),
-    getMe: () => API.get('/admin/me')
+    getMe: () => API.get('/admin/me'),
+    googleLogin: (tokenData) => API.post('/admin/google-login', tokenData)
   },
 
   // Traveler Auth
   userAuth: {
     login: (credentials) => API.post('/users/login', credentials),
     register: (details) => API.post('/users/register', details),
-    getMe: () => API.get('/users/me')
+    getMe: () => API.get('/users/me'),
+    googleLogin: (tokenData) => API.post('/users/google-login', tokenData)
   },
 
   // Packages

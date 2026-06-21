@@ -79,6 +79,29 @@ export const UserAuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
+  const googleLogin = async (token) => {
+    try {
+      setLoading(true);
+      const response = await apiService.userAuth.googleLogin({ token });
+      if (response.data?.success) {
+        const { token: jwtToken, ...userData } = response.data.data;
+        localStorage.setItem('tt_user_token', jwtToken);
+        setUser(userData);
+        setIsAuthenticated(true);
+        return { success: true };
+      }
+      return { success: false, error: 'Google Login failed' };
+    } catch (err) {
+      console.error('Google user login error:', err);
+      return {
+        success: false,
+        error: err.response?.data?.error || 'Google login failed'
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <UserAuthContext.Provider
       value={{
@@ -87,7 +110,8 @@ export const UserAuthProvider = ({ children }) => {
         loading,
         login,
         register,
-        logout
+        logout,
+        googleLogin
       }}
     >
       {children}

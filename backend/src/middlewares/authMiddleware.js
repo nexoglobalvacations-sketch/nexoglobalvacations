@@ -1,6 +1,14 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret && process.env.NODE_ENV === 'production') {
+    throw new Error('FATAL: JWT_SECRET environment variable is missing in production!');
+  }
+  return secret || 'tt_secret_123_abc';
+};
+
 const protect = async (req, res, next) => {
   let token;
 
@@ -14,7 +22,7 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
 
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'tt_secret_123_abc');
+      const decoded = jwt.verify(token, getJwtSecret());
 
       // Get admin from the database and exclude password
       req.admin = await Admin.findById(decoded.id).select('-password');
@@ -44,7 +52,7 @@ const protectUser = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'tt_secret_123_abc');
+      const decoded = jwt.verify(token, getJwtSecret());
 
       const User = require('../models/User');
       req.user = await User.findById(decoded.id).select('-password');

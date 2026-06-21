@@ -31,10 +31,10 @@ const seedData = async () => {
     // 1. Create Default Admin
     const admin = await Admin.create({
       name: 'TT Admin',
-      email: 'admin@ttcompany.com',
+      email: 'nexoglobalvacations@gmail.com',
       password: 'admin123' // Will be pre-hashed by schema hooks
     });
-    console.log('Default admin created: admin@ttcompany.com / admin123');
+    console.log('Default admin created: nexoglobalvacations@gmail.com / admin123');
 
     // 2. Create Destinations
     const destinationsData = [

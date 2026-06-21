@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
-  const { login, isAuthenticated, loading } = useAuth();
+  const { login, googleLogin, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -34,6 +35,23 @@ const Login = () => {
         navigate('/admin/dashboard');
       } else {
         setErrorMsg(result.error || 'Invalid credentials');
+      }
+    } catch (err) {
+      setErrorMsg('Server connection failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setSubmitting(true);
+      setErrorMsg('');
+      const result = await googleLogin(credentialResponse.credential);
+      if (result.success) {
+        navigate('/admin/dashboard');
+      } else {
+        setErrorMsg(result.error || 'Google Login failed.');
       }
     } catch (err) {
       setErrorMsg('Server connection failed. Please try again.');
@@ -75,7 +93,6 @@ const Login = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@ttcompany.com"
               className="w-full bg-primary/40 border border-gold/15 px-4 py-3 rounded-xl text-white focus:outline-none focus:border-gold placeholder-gray-500"
             />
           </div>
@@ -88,7 +105,6 @@ const Login = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
               className="w-full bg-primary/40 border border-gold/15 px-4 py-3 rounded-xl text-white focus:outline-none focus:border-gold placeholder-gray-500"
             />
           </div>
@@ -101,6 +117,24 @@ const Login = () => {
           >
             {submitting ? 'Authenticating...' : 'Sign In'}
           </button>
+
+          {/* Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-gold/15"></div>
+            <span className="px-3 text-gray-500 text-[10px] uppercase font-bold tracking-wider">or</span>
+            <div className="flex-grow border-t border-gold/15"></div>
+          </div>
+
+          {/* Google Login Button */}
+          <div className="flex justify-center w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setErrorMsg('Google Sign-In failed')}
+              theme="filled_blue"
+              shape="rectangular"
+              width="368"
+            />
+          </div>
         </form>
 
         <div className="mt-8 text-center text-[10px] text-gray-500">

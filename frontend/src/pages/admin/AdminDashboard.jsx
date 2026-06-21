@@ -32,6 +32,26 @@ const AdminDashboard = () => {
   const [testModalOpen, setTestModalOpen] = useState(false);
   const [sectionModalOpen, setSectionModalOpen] = useState(false);
 
+  // Custom delete confirmation modal state
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
+
+  const triggerConfirm = (title, message, onConfirmAction) => {
+    setConfirmModal({
+      isOpen: true,
+      title: title || 'Are you sure?',
+      message: message || 'Do you really want to proceed?',
+      onConfirm: () => {
+        onConfirmAction();
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
+  };
+
   // Current editing records
   const [editingPackageId, setEditingPackageId] = useState(null);
   const [editingDestId, setEditingDestId] = useState(null);
@@ -128,16 +148,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleLeadDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to permanently delete this lead?')) return;
-    try {
-      const response = await apiService.inquiries.delete(id);
-      if (response.data?.success) {
-        setLeads(leads.filter((l) => l._id !== id));
+  const handleLeadDelete = (id) => {
+    triggerConfirm(
+      'Delete Lead / Inquiry',
+      'Are you sure you want to permanently delete this lead? This action cannot be undone.',
+      async () => {
+        try {
+          const response = await apiService.inquiries.delete(id);
+          if (response.data?.success) {
+            setLeads(leads.filter((l) => l._id !== id));
+          }
+        } catch (err) {
+          console.error('Failed to delete lead:', err);
+        }
       }
-    } catch (err) {
-      console.error('Failed to delete lead:', err);
-    }
+    );
   };
 
   // 2. PACKAGES HANDLERS
@@ -291,16 +316,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handlePackageDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to permanently delete this package?')) return;
-    try {
-      const response = await apiService.packages.delete(id);
-      if (response.data?.success) {
-        setPackages(packages.filter((p) => p._id !== id));
+  const handlePackageDelete = (id) => {
+    triggerConfirm(
+      'Delete Package',
+      'Are you sure you want to permanently delete this package? All associated data will be lost.',
+      async () => {
+        try {
+          const response = await apiService.packages.delete(id);
+          if (response.data?.success) {
+            setPackages(packages.filter((p) => p._id !== id));
+          }
+        } catch (err) {
+          console.error('Failed to delete package:', err);
+        }
       }
-    } catch (err) {
-      console.error('Failed to delete package:', err);
-    }
+    );
   };
 
   const handleGalleryUpload = async (e) => {
@@ -456,16 +486,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDestDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this destination?')) return;
-    try {
-      const response = await apiService.destinations.delete(id);
-      if (response.data?.success) {
-        setDestinations(destinations.filter((d) => d._id !== id));
+  const handleDestDelete = (id) => {
+    triggerConfirm(
+      'Delete Destination',
+      'Are you sure you want to delete this destination? Packages associated with this destination may be affected.',
+      async () => {
+        try {
+          const response = await apiService.destinations.delete(id);
+          if (response.data?.success) {
+            setDestinations(destinations.filter((d) => d._id !== id));
+          }
+        } catch (err) {
+          console.error('Failed to delete destination:', err);
+        }
       }
-    } catch (err) {
-      console.error('Failed to delete destination:', err);
-    }
+    );
   };
 
   // 4. FAQS HANDLERS
@@ -509,16 +544,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleFaqDelete = async (id) => {
-    if (!window.confirm('Delete this FAQ?')) return;
-    try {
-      const response = await apiService.faqs.delete(id);
-      if (response.data?.success) {
-        setFaqs(faqs.filter(f => f._id !== id));
+  const handleFaqDelete = (id) => {
+    triggerConfirm(
+      'Delete FAQ',
+      'Are you sure you want to delete this FAQ? It will be removed from the public FAQ section.',
+      async () => {
+        try {
+          const response = await apiService.faqs.delete(id);
+          if (response.data?.success) {
+            setFaqs(faqs.filter(f => f._id !== id));
+          }
+        } catch (err) {
+          console.error('FAQ delete failed:', err);
+        }
       }
-    } catch (err) {
-      console.error('FAQ delete failed:', err);
-    }
+    );
   };
 
   // 5. TESTIMONIALS HANDLERS
@@ -585,16 +625,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleTestDelete = async (id) => {
-    if (!window.confirm('Delete Testimonial?')) return;
-    try {
-      const response = await apiService.testimonials.delete(id);
-      if (response.data?.success) {
-        setTestimonials(testimonials.filter((t) => t._id !== id));
+  const handleTestDelete = (id) => {
+    triggerConfirm(
+      'Delete Testimonial',
+      'Are you sure you want to delete this testimonial? It will no longer display on the home reviews section.',
+      async () => {
+        try {
+          const response = await apiService.testimonials.delete(id);
+          if (response.data?.success) {
+            setTestimonials(testimonials.filter((t) => t._id !== id));
+          }
+        } catch (err) {
+          console.error(err);
+        }
       }
-    } catch (err) {
-      console.error(err);
-    }
+    );
   };
 
   // 6. DYNAMIC HOMEPAGE SECTIONS HANDLERS
@@ -656,16 +701,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleSectionDelete = async (id) => {
-    if (!window.confirm('Delete this Homepage Section?')) return;
-    try {
-      const response = await apiService.sections.delete(id);
-      if (response.data?.success) {
-        setSections(sections.filter(s => s._id !== id));
+  const handleSectionDelete = (id) => {
+    triggerConfirm(
+      'Delete Home Section',
+      'Are you sure you want to delete this homepage slider section? It will be removed from the traveler view.',
+      async () => {
+        try {
+          const response = await apiService.sections.delete(id);
+          if (response.data?.success) {
+            setSections(sections.filter(s => s._id !== id));
+          }
+        } catch (err) {
+          console.error(err);
+        }
       }
-    } catch (err) {
-      console.error(err);
-    }
+    );
   };
 
   return (
@@ -2029,6 +2079,51 @@ const AdminDashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* F. CUSTOM DELETE CONFIRMATION MODAL */}
+      {confirmModal.isOpen && (
+        <div className="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4 backdrop-blur-sm transition-all duration-300">
+          <div className="bg-white rounded-3xl max-w-sm w-full overflow-hidden text-left shadow-2xl border border-gray-100 transform scale-100 transition-all duration-300">
+            <div className="bg-primary text-white p-5 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <FiTrash2 className="h-5 w-5 text-red-500 animate-pulse" />
+                <h3 className="font-serif font-bold text-sm text-gold">
+                  {confirmModal.title}
+                </h3>
+              </div>
+              <button 
+                onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))} 
+                className="text-white hover:text-gold focus:outline-none transition-colors"
+              >
+                <FiXCircle className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                {confirmModal.message}
+              </p>
+              
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button" 
+                  onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-full cursor-pointer text-xs transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmModal.onConfirm}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-2.5 rounded-full shadow-lg hover:shadow-red-200 cursor-pointer text-xs transition-all duration-200"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

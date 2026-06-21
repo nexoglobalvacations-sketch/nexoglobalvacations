@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useUserAuth } from '../../context/UserAuthContext';
 import { FiX, FiLock, FiMail, FiUser, FiPhone, FiAlertCircle } from 'react-icons/fi';
+import { GoogleLogin } from '@react-oauth/google';
 
 const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
-  const { login, register } = useUserAuth();
+  const { login, register, googleLogin } = useUserAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   
   // Form fields
@@ -31,14 +32,14 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
           setLoading(false);
           return;
         }
-        result = await register({ name, email, phone, password });
+        result = await register(name, email, password, phone);
       } else {
         if (!email || !password) {
           setError('Please enter both email and password.');
           setLoading(false);
           return;
         }
-        result = await login({ email, password });
+        result = await login(email, password);
       }
 
       if (result?.success) {
@@ -49,6 +50,25 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
       }
     } catch (err) {
       console.error('Modal Auth Error:', err);
+      setError('Connection failed. Please check network.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      setError('');
+      const result = await googleLogin(credentialResponse.credential);
+      if (result.success) {
+        if (onSuccess) onSuccess();
+        onClose();
+      } else {
+        setError(result.error || 'Google Login failed.');
+      }
+    } catch (err) {
+      console.error('Google user login error:', err);
       setError('Connection failed. Please check network.');
     } finally {
       setLoading(false);
@@ -107,7 +127,6 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
                   <FiUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gold h-4 w-4" />
                   <input
                     type="text" required value={name} onChange={(e) => setName(e.target.value)}
-                    placeholder="Rajesh Kumar"
                     className="w-full bg-white/5 border border-white/10 pl-11 pr-4 py-3 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-gold"
                   />
                 </div>
@@ -119,7 +138,6 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
                   <FiPhone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gold h-4 w-4" />
                   <input
                     type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 9876543210"
                     className="w-full bg-white/5 border border-white/10 pl-11 pr-4 py-3 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-gold"
                   />
                 </div>
@@ -134,7 +152,6 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
               <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gold h-4 w-4" />
               <input
                 type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-                placeholder="rajesh@traveler.com"
                 className="w-full bg-white/5 border border-white/10 pl-11 pr-4 py-3 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-gold"
               />
             </div>
@@ -146,7 +163,6 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
               <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gold h-4 w-4" />
               <input
                 type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
                 className="w-full bg-white/5 border border-white/10 pl-11 pr-4 py-3 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-gold"
               />
             </div>
@@ -159,6 +175,24 @@ const TravelerAuthModal = ({ isOpen, onClose, onSuccess }) => {
           >
             {loading ? 'Processing...' : isSignUp ? 'Create Traveler Account' : 'Sign In as Traveler'}
           </button>
+
+          {/* Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-white/10"></div>
+            <span className="px-3 text-gray-500 text-[10px] uppercase font-bold tracking-wider">or</span>
+            <div className="flex-grow border-t border-white/10"></div>
+          </div>
+
+          {/* Google Login Button */}
+          <div className="flex justify-center w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google Sign-In failed')}
+              theme="outline"
+              shape="rectangular"
+              width="368"
+            />
+          </div>
         </form>
 
         {/* Toggle between Login / Register */}

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { UserAuthProvider, useUserAuth } from './context/UserAuthContext';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Common Components
 import Navbar from './components/common/Navbar';
@@ -60,64 +61,68 @@ const UserProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+
   return (
-    <Router>
-      <AuthProvider>
-        <UserAuthProvider>
-          <div className="flex flex-col min-h-screen bg-pearl font-sans text-primary">
-            {/* Header Navigation */}
-            <Navbar />
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <Router>
+        <AuthProvider>
+          <UserAuthProvider>
+            <div className="flex flex-col min-h-screen bg-pearl font-sans text-primary">
+              {/* Header Navigation */}
+              <Navbar />
 
-            {/* Main Views Container */}
-            <main className="flex-grow">
-              <Routes>
-                {/* User Portal Endpoints */}
-                <Route path="/" element={<Home />} />
-                <Route path="/packages" element={<AllPackages />} />
-                <Route path="/packages/:slug" element={<PackageDetails />} />
-                <Route path="/category/:catName" element={<CategoryPage />} />
-                <Route path="/about" element={<AboutUs />} />
-                <Route path="/contact" element={<ContactUs />} />
-                <Route path="/faqs" element={<FAQsPage />} />
-                <Route path="/inquiry" element={<InquiryPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/user/login" element={<UserLoginSignup />} />
-                <Route path="/destinations" element={<DestinationsPage />} />
-                
-                {/* Traveler Protected Dashboard */}
-                <Route
-                  path="/user/dashboard"
-                  element={
-                    <UserProtectedRoute>
-                      <UserDashboard />
-                    </UserProtectedRoute>
-                  }
-                />
+              {/* Main Views Container */}
+              <main className="flex-grow">
+                <Routes>
+                  {/* User Portal Endpoints */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/packages" element={<AllPackages />} />
+                  <Route path="/packages/:slug" element={<PackageDetails />} />
+                  <Route path="/category/:catName" element={<CategoryPage />} />
+                  <Route path="/about" element={<AboutUs />} />
+                  <Route path="/contact" element={<ContactUs />} />
+                  <Route path="/faqs" element={<FAQsPage />} />
+                  <Route path="/inquiry" element={<InquiryPage />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/user/login" element={<UserLoginSignup />} />
+                  <Route path="/destinations" element={<DestinationsPage />} />
+                  
+                  {/* Traveler Protected Dashboard */}
+                  <Route
+                    path="/user/dashboard"
+                    element={
+                      <UserProtectedRoute>
+                        <UserDashboard />
+                      </UserProtectedRoute>
+                    }
+                  />
 
-                {/* Admin Portal Guarded Endpoints */}
-                <Route
-                  path="/admin/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  }
-                />
+                  {/* Admin Secured Dashboard & Sub-modules */}
+                  <Route
+                    path="/admin/*"
+                    element={
+                      <ProtectedRoute>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* Catch-all Fallback */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </main>
+                  {/* Redirect unmatched endpoints */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </main>
 
-            {/* Persistent Floating Quick CTAs (WhatsApp, Enquire, Scroll-top) */}
-            <FloatButtons />
+              {/* Persistent Floating Quick CTAs (WhatsApp, Enquire, Scroll-top) */}
+              <FloatButtons />
 
-            {/* Footer Navigation */}
-            <Footer />
-          </div>
-        </UserAuthProvider>
-      </AuthProvider>
-    </Router>
+              {/* Footer Navigation */}
+              <Footer />
+            </div>
+          </UserAuthProvider>
+        </AuthProvider>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 

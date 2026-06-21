@@ -64,8 +64,32 @@ export const AuthProvider = ({ children }) => {
     setAdmin(null);
   };
 
+  // Admin Google login function
+  const googleLogin = async (token) => {
+    try {
+      setLoading(true);
+      const response = await apiService.admin.googleLogin({ token });
+      
+      if (response.data?.success) {
+        const { token: jwtToken, ...adminData } = response.data.data;
+        localStorage.setItem('tt_admin_token', jwtToken);
+        setAdmin(adminData);
+        return { success: true };
+      }
+      return { success: false, error: 'Google Login failed' };
+    } catch (error) {
+      console.error('Google login action error:', error);
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Unauthorized admin account'
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ admin, loading, login, logout, isAuthenticated: !!admin }}>
+    <AuthContext.Provider value={{ admin, loading, login, logout, googleLogin, isAuthenticated: !!admin }}>
       {children}
     </AuthContext.Provider>
   );

@@ -25,7 +25,7 @@ const FloatButtons = () => {
   };
 
   const openWhatsApp = () => {
-    const phoneNumber = '919999946509'; // Phone number from user's screenshot
+    const phoneNumber = '916269489351'; // Phone number from user's screenshot
     const message = encodeURIComponent("Hello Nexo Global Vacations! I am interested in planning a customized luxury tour package. Please share details.");
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };

@@ -206,7 +206,7 @@ const UserDashboard = () => {
                 Connect with our Delhi office via WhatsApp to accelerate review or modify hotel / meal choices instantly.
               </p>
               <a
-                href="https://wa.me/919999946509"
+                href="https://wa.me/916269489351"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-block bg-gold text-primary font-bold text-[10px] uppercase tracking-wider px-5 py-2.5 rounded-full mt-2 hover:bg-gold-light transition-colors"

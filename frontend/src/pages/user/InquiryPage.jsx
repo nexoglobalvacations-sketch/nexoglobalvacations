@@ -150,7 +150,7 @@ const InquiryPage = () => {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="e.g. +91 9999946509"
+                  placeholder="e.g. +91 98765 43210"
                   className="w-full bg-pearl border border-gray-200 px-4 py-3 rounded-xl text-primary focus:outline-none focus:border-gold"
                 />
               </div>

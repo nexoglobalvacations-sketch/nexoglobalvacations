@@ -98,7 +98,7 @@ const PackageDetails = () => {
 
   const triggerWhatsApp = () => {
     if (!pack) return;
-    const phoneNumber = '919999946509';
+    const phoneNumber = '916269489351';
     const text = encodeURIComponent(
       `Hello Nexo Global Vacations! I am interested in booking the "${pack.name}" package (${pack.duration}) starting from ₹${pack.price}. Please guide me on next steps.`
     );
@@ -431,7 +431,7 @@ const PackageDetails = () => {
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="e.g. +91 9999946509"
+                    placeholder="e.g. +91 98765 43210"
                     className="w-full bg-pearl border border-gray-200 px-4 py-2.5 rounded-xl text-primary focus:outline-none focus:border-gold"
                   />
                 </div>

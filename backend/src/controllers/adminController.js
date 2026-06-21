@@ -1,9 +1,19 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
+const { OAuth2Client } = require('google-auth-library');
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret && process.env.NODE_ENV === 'production') {
+    throw new Error('FATAL: JWT_SECRET environment variable is missing in production!');
+  }
+  return secret || 'tt_secret_123_abc';
+};
 
 // Generate JWT
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'tt_secret_123_abc', {
+  return jwt.sign({ id }, getJwtSecret(), {
     expiresIn: '30d',
   });
 };
@@ -111,8 +121,61 @@ const getMe = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Authenticate admin via Google OAuth
+ * @route   POST /api/admin/google-login
+ * @access  Public
+ */
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ success: false, error: 'Google authentication token is missing' });
+    }
+
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      return res.status(500).json({ success: false, error: 'Google OAuth is not configured on this server.' });
+    }
+
+    // Verify token with Google
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Failed to retrieve email from Google token' });
+    }
+
+    // Check if the admin account with this email exists in the database
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(401).json({ 
+        success: false, 
+        error: 'Unauthorized admin access. Please login with a registered admin email.' 
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        token: generateToken(admin._id),
+      },
+    });
+  } catch (error) {
+    console.error('Google Admin Login Error:', error);
+    res.status(500).json({ success: false, error: 'Google login failed: ' + error.message });
+  }
+};
+
 module.exports = {
   registerAdmin,
   loginAdmin,
   getMe,
+  googleLogin,
 };
