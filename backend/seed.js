@@ -32,9 +32,9 @@ const seedData = async () => {
     const admin = await Admin.create({
       name: 'TT Admin',
       email: 'nexoglobalvacations@gmail.com',
-      password: 'admin123' // Will be pre-hashed by schema hooks
+      password: process.env.ADMIN_PASSWORD || 'admin123' // Pre-hashed by hooks, falls back to default if env is unset
     });
-    console.log('Default admin created: nexoglobalvacations@gmail.com / admin123');
+    console.log(`Default admin created: nexoglobalvacations@gmail.com / ${process.env.ADMIN_PASSWORD ? '********' : 'admin123'}`);
 
     // 2. Create Destinations
     const destinationsData = [
