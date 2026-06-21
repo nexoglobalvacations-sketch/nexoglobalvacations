@@ -29,12 +29,16 @@ const seedData = async () => {
     console.log('Database cleared.');
 
     // 1. Create Default Admin
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (process.env.NODE_ENV === 'production' && !adminPassword) {
+      throw new Error('FATAL: ADMIN_PASSWORD environment variable is missing! Seeding in production requires a secure ADMIN_PASSWORD to be defined.');
+    }
     const admin = await Admin.create({
       name: 'TT Admin',
       email: 'nexoglobalvacations@gmail.com',
-      password: process.env.ADMIN_PASSWORD || 'admin123' // Pre-hashed by hooks, falls back to default if env is unset
+      password: adminPassword || 'admin123' // Pre-hashed by hooks, falls back to local default
     });
-    console.log(`Default admin created: nexoglobalvacations@gmail.com / ${process.env.ADMIN_PASSWORD ? '********' : 'admin123'}`);
+    console.log(`Default admin created: nexoglobalvacations@gmail.com / ${adminPassword ? '********' : 'admin123'}`);
 
     // 2. Create Destinations
     const destinationsData = [
