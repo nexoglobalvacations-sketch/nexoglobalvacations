@@ -158,7 +158,7 @@ const UserDashboard = () => {
           <h1 className="text-3xl sm:text-4xl font-serif text-primary font-bold">
             Namaste, {user?.name || 'Explorer'}
           </h1>
-          <p className="text-xs text-gray-400">Track and review all your custom MERN travel bookings and status pipelines</p>
+          <p className="text-xs text-gray-400">Track and review all your custom travel bookings and status</p>
         </div>
         
         <button

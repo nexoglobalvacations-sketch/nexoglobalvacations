@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import FloatButtons from './components/common/FloatButtons';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // User Portal Pages
 import Home from './pages/user/Home';
@@ -66,6 +67,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
       <Router>
+        <ScrollToTop />
         <AuthProvider>
           <UserAuthProvider>
             <div className="flex flex-col min-h-screen bg-pearl font-sans text-primary">
