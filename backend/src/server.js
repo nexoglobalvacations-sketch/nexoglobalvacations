@@ -22,6 +22,7 @@ const sectionRoutes = require('./routes/sectionRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
 const faqRoutes = require('./routes/faqRoutes');
 const testimonialRoutes = require('./routes/testimonialRoutes');
+const startKeepAlive = require('./utils/keepAlive');
 
 const app = express();
 
@@ -81,6 +82,17 @@ const authLimiter = process.env.NODE_ENV === 'production'
     })
   : (req, res, next) => next();
 
+// Health check endpoints (placed before rate limiters to avoid being throttled)
+const healthHandler = (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString()
+  });
+};
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
+
 // Apply general rate limiting to all api endpoints
 app.use('/api', generalLimiter);
 
@@ -115,6 +127,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  startKeepAlive();
 });
 
 // Graceful rejection catches
