@@ -34,23 +34,50 @@ app.use(helmet());
 app.use(mongoSanitize());
 
 // CORS configuration
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+const defaultAllowedOrigins = [
+  'https://itinearary.com',
+  'https://www.itinearary.com',
+  'https://itinerary.com',
+  'https://www.itinerary.com',
+  'https://nexoglobalvacations.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5173'
+];
 
-app.use(cors({
+const envOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',')
+      .map(origin => origin.trim().replace(/\/+$/, ''))
+      .filter(Boolean)
+  : [];
+
+// Deduplicate all allowed origins
+const allowedOrigins = Array.from(new Set([...defaultAllowedOrigins, ...envOrigins]));
+
+const isOriginAllowed = (origin) => {
+  // Allow requests without Origin header (e.g. server-to-server, curl, Postman, keep-alive)
+  if (!origin) return true;
+  const normalized = origin.trim().replace(/\/+$/, '');
+  return allowedOrigins.includes(normalized);
+};
+
+const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    if (isOriginAllowed(origin)) {
+      return callback(null, true);
     }
-    return callback(null, true);
+    const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+    return callback(new Error(msg), false);
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -116,8 +143,25 @@ app.get('/', (req, res) => {
 
 // Centralized error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Unhandled Server Error:', err.stack);
-  res.status(res.statusCode === 200 ? 500 : res.statusCode).json({
+  // Ensure CORS headers are attached on error responses for allowed origins
+  const origin = req.headers.origin;
+  if (origin && isOriginAllowed(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Vary', 'Origin');
+  }
+
+  // Handle CORS policy rejections with 403 Forbidden instead of 500
+  if (err.message && err.message.includes('CORS policy')) {
+    return res.status(403).json({
+      success: false,
+      error: err.message
+    });
+  }
+
+  console.error('Unhandled Server Error:', err.stack || err);
+  const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  res.status(statusCode).json({
     success: false,
     error: err.message || 'Internal Server Error'
   });
